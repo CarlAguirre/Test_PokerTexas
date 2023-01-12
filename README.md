@@ -16,7 +16,7 @@ Nota: el texto solo es explicativo, debe entregar el resultado en un objeto que 
 
 Debe tener en cuenta que solo debe implementar 5 de los 10 tipos de manos pero en el orden normal, por ejemplo: Escalera real, Escalera de color, Poker, Full House y Color
 
-##Descripción de las reglas de poker
+## Descripción de las reglas de poker
 
 Una baraja de póquer contiene 52 cartas; cada carta tiene un palo que es uno de los tréboles, diamantes, corazones o espadas (indicados con C , D, H y S respectivamente). Cada tarjeta también tiene un valor que es uno de 2, 3, 4, 5, 6, 7, 8, 9, 10, jota, reina, rey, as (denotado 2, 3, 4, 5, 6, 7, 8 , 9, 10, J, Q, K, A). Para fines de puntuación, los trajes no están ordenados, mientras que los valores se ordenan como se indicó anteriormente, siendo 2 el valor más bajo y el más alto el as.
 
@@ -79,11 +79,11 @@ Debe implementar solo 5 de las 10 validaciones, debe indicar cuáles de las 5 se
 
 También debe implementar los test con los casos mencionados en la descripción según las validaciones que escoja, ya que se evaluará que el test pase.
 
-Debe publicar en un servicio Paas que este vinculado con el repositorio del ejercicio resuelto (algo parecido al flujo de trabajo de heroku, por ejemplo puede usar RailWay o cualquier otro servicio que sea parecido).
+Debe publicar el servicio en un [Paas](https://en.wikipedia.org/wiki/Platform_as_a_service) que este vinculado con el repositorio del ejercicio resuelto (algo parecido al flujo de trabajo de heroku, por ejemplo puede usar [RailWay](https://railway.app/) o cualquier otro servicio que sea parecido).
 
 ## Entregable
 
-Url de repositorio publico con la solucion del proyecto
+Url de repositorio publico con la solucion del proyecto.
 
 Url del servicio web funcionando en una plataforma que este vinculado al repositorio.
 
@@ -99,13 +99,9 @@ Url del servicio web funcionando en una plataforma que este vinculado al reposit
 
 - Lógica de la implementación.
 
-- Se da un plus si crea nuevos test
-
-- Se da un plus si crea test unitarios en el proyecto
+- Se da un plus si crea test unitarios en el proyecto.
 
 - Se da un plus si implementa más de las 5 validaciones, pero solo si funcionan todas las que implemente.
-
-- Se da un plus si implementa la estructura del juego de una manera distinta (Es decir que no utilizar las clases que se entregan, por ejemplo PokerHand, WinnerRound, etc).
 
 - Utilizacion de git, como creación de nuevas ramas, utilizar estándar en los mensajes de commit
 
