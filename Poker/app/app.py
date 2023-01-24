@@ -26,21 +26,60 @@ def manos():
     return jsonify(CardValue(manos_New))
 
 
-# Definiendo el valor de cada carta de las manos
+# Obtener  listas  de las manos divididas
 def CardValue(manos_New):
     
-    valores={'2C':2, '3C':3, '4C':4, '5C':5, '6C':6, '7C':7, '8C':8, '9C':9, '10C':10, 'JC':11, 'QC':12, 'KC':13, 'AC':14,'2D':2, '3D':3, '4D':4, '5D':5, '6D':6, '7D':7, '8D':8, '9D':9, '10D':10, 'JD':11, 'QD':12, 'KD':13, 'AD':14,'2H':2, '3H':3, '4H':4, '5H':5, '6H':6, '7H':7, '8H':8, '9H':9, '10H':10, 'JH':11, 'QH':12, 'KH':13, 'AH':14,'2S':2, '3S':3, '4S':4, '5S':5, '6S':6, '7S':7, '8S':8, '9S':9, '10S':10, 'JS':11, 'QS':12, 'KS':13, 'AS':14}
-    
-    
+    # iniciando listas de la amano 1
+    mano1Numbers= []
+    mano1Palos=[]
 
-    pass
+    # iniciando listas de la amano 2
+    mano2Numbers= []
+    mano2Palos=[]
     
-
+    a= manos_New['hand1']
+    b= manos_New['hand2']
+    
+    mano1=a.split(" ")
+    for carta in mano1:
+        mano1Numbers.append(carta[0])
+        mano1Palos.append(carta[1])
+    
+    mano2=b.split(" ")
+    for carta in mano2:
+        mano2Numbers.append(carta[0])
+        mano2Palos.append(carta[1])
+    
+    print (mano1Numbers, mano1Palos)
+    print (mano2Numbers, mano2Palos)
+    
+    """ miset= set(mano1Numbers)
+    
+    print (miset) """
+    return mano1Numbers, mano1Palos, mano2Numbers, mano2Palos
+    
 
 # Validacion Carta alta
-def HighCard():
+def HighCard(mano1Numbers, mano1Palos, mano2Numbers, mano2Palos):
+    
+    mayorMano1 = CartaMayor(mano1Numbers)
+    mayorMano2 = CartaMayor(mano2Numbers)
+    
+    if mayorMano1 > mayorMano2:
+        return jsonify({'winnerHand': {'hand1'}, 'winnerHandType':{'HighCard'},'compositionWinnerHand': {'mayorMano1'}})
+    else:
+        return jsonify({'winnerHand': {'hand2'}, 'winnerHandType':{'HighCard'},'compositionWinnerHand': {'mayorMano2'}})
+    
 
-    pass
+
+
+def CartaMayor(numbers):
+    nMayor=0
+    for n in numbers:
+        if nMayor<n:
+            nMayor=n
+    return nMayor
+
 
 # Validacion 1 par
 def OnePair():
