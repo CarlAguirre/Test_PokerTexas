@@ -24,8 +24,25 @@ def manos():
     "hand2": request.json['hand2']
     }
 
-    res=compararManos(manos_New)
-#"winnerHand:", resultado[0], "winnerHandType:",resultado[1], "compositionWinnerHand:",resultado[2]
+    manosSeparadas=CardValue(manos_New)
+    tipoMano= typeHand(manosSeparadas[0], manosSeparadas[1], manosSeparadas[2],manosSeparadas[3])
+
+    if tipoMano[0] == "HighCard":
+        res=HighCard(manosSeparadas[0], manosSeparadas[2], tipoMano[1])
+    
+    if tipoMano[0] == "Flush":
+        res=Flush(manosSeparadas[0], manosSeparadas[1], manosSeparadas[2],manosSeparadas[3])
+
+    if tipoMano[0] == "FourOfAKind":
+        res=FourOfAKind(manosSeparadas[0], manosSeparadas[1], manosSeparadas[2],manosSeparadas[3])
+    
+    if tipoMano[0] == "TwoPair":
+        res=TwoPair(manosSeparadas[0], manosSeparadas[1], manosSeparadas[2],manosSeparadas[3])
+    
+    if tipoMano[0] == "OnePair":
+        res=OnePair(manosSeparadas[0], manosSeparadas[2], tipoMano[1])
+    
+
     return jsonify({"winnerHand": res[0],"winnerHandType":res[1], "compositionWinnerHand":res[2]})
 
 
@@ -57,64 +74,56 @@ def CardValue(manos_New):
     print (mano2Numbers, mano2Palos)
     
     return mano1Numbers, mano1Palos, mano2Numbers, mano2Palos
+
+
+# Identifificar el tipo de mano
+def typeHand(mano1Numbers, mano1Palos, mano2Numbers, mano2Palos):
+    tipoMano = ""
+    nMayor=""
+
+    #identificando la carta mas alta
+    if 'A'in mano1Numbers or 'A'in mano2Numbers:
+        nMayor='A'
+    else:
+        for n in mano1Numbers:
+            for j in mano2Numbers:
+                if nMayor<j:
+                    nMayor=j
+            if nMayor<n:
+                nMayor=n
+    if nMayor == 'A':
+        nMayor='As'
+    if nMayor == 'J':
+        nMayor='Jack'
+    if nMayor == 'Q':
+        nMayor='Queen'
+    if nMayor == 'K':
+        nMayor='King'
+    #----------Mano Color-----------
+    if len(set(mano1Palos))==1 or len(set(mano2Palos))==1:
+        tipoMano ="Flush"
     
-
-def compararManos(manos_New):
-    bandera=1
-    winnerHandType= ""
-    resultado=[]
-    manosSeparadas=CardValue(manos_New)
-
-    print("---------------PASO 1-----------------")
-    print(winnerHandType)
-    print(manosSeparadas[0])
-    print(manosSeparadas[2])
-        
-    """ Straight()
-    if winnerHandType== "Straight":
-        pass
+    #----------Mano Pares-----------
+    if tipoMano != "Flush":
+        setMano1=set()
+        dup= [x for x in mano1Numbers if x in setMano1 or (setMano1.add(x) or False)]
+        setMano2=set()
+        dup2= [x for x in mano2Numbers if x in setMano2 or (setMano2.add(x) or False)]
     
+        if len(dup)==3 or len(dup2)==3:
+            tipoMano ="FourOfAKind"
+        elif len(dup)==2 or len(dup2):
+            tipoMano ="TwoPair"
+        elif len(dup)==1 or len(dup2)==1:
+            tipoMano ="OnePair"
 
-    ThreeOfAKind()
-    if winnerHandType== "ThreeOfAKind":
-        pass
+    if tipoMano == "":
+        tipoMano = "HighCard"
 
-    TwoPair()
-    if winnerHandType== "TwoPair":
-        pass
-    """
-
-    if bandera==1:
-        resultado = OnePair(manosSeparadas[0], manosSeparadas[2])
-        
-            
-        if resultado[1]== "OnePair":
-
-            bandera=0       
-            print (bandera)
-            print("---------------RESPUESTA OnePair -----------------")
-    
- 
-    if bandera==1:
-
-        resultado = HighCard(manosSeparadas[0], manosSeparadas[2])
-        print("---------------AQUIIIIIIIII -----------------")
-        print (resultado[1])
-
-        if resultado[1]=="HighCard":
-                print("---------------RESPUESTA HighCard -----------------")
-
-                print("winnerHand:", resultado[0], "winnerHandType:",resultado[1], "compositionWinnerHand:",resultado[2])
-    
-    return resultado
-
-
-
-
-
+    return tipoMano, nMayor
 
 # Validacion Carta alta
-def HighCard(mano1Numbers, mano2Numbers):
+def HighCard(mano1Numbers, mano2Numbers, nmayor):
     
     mayorMano1 = CartaMayor(mano1Numbers)
     mayorMano2 = CartaMayor(mano2Numbers)
@@ -139,26 +148,34 @@ def HighCard(mano1Numbers, mano2Numbers):
     
 # Seleccion de la carta mas alta
 def CartaMayor(numbers):
-    print 
     nMayor=''
     if 'A'in numbers:
-        nMayor='As'
-    if 'J'in numbers:
-        nMayor='Jack'
-    if 'Q'in numbers:
-        nMayor='Queen'
-    if 'K'in numbers:
-        nMayor='King'
-
+        nMayor='A'
     else:
         for n in numbers:
             if nMayor<n:
                 nMayor=n
+
+    if nMayor == 'A':
+        nMayor='As'
+    if nMayor == 'J':
+        nMayor='Jack'
+    if nMayor == 'Q':
+        nMayor='Queen'
+    if nMayor == 'K':
+        nMayor='King'
     return nMayor
 
 
+def Flush():
+    pass
+
+def FourOfAKind():
+    pass
+
+
 # Validacion 1 par
-def OnePair(mano1Numbers, mano2Numbers):
+def OnePair(mano1Numbers, mano2Numbers, nmayor):
     
     setMano1=set()
     dup= [x for x in mano1Numbers if x in setMano1 or (setMano1.add(x) or False)]
@@ -192,47 +209,92 @@ def OnePair(mano1Numbers, mano2Numbers):
     elif len(dup) > len(dup2):
         winnerHand='hand1'
         winnerHandType='OnePair'
+        if dup[0] =='A':
+            dup[0] ='As'
+        if dup[0] == 'J':
+            dup[0]='Jack'
+        if dup[0] == 'Q':
+            dup[0]='Queen'
+        if dup[0] == 'K':
+            dup[0]='King'
         compositionWinnerHand = dup
 
     elif len(dup) < len(dup2):
         winnerHand='hand2'
         winnerHandType='OnePair'
+        if dup2[0] =='A':
+            dup2[0] ='As'
+        if dup2[0] == 'J':
+            dup2[0]='Jack'
+        if dup2[0] == 'Q':
+            dup2[0]='Queen'
+        if dup2[0] == 'K':
+            dup2[0]='King'
         compositionWinnerHand = dup2
-
 
     print("winnerHand:", winnerHand, "winnerHandType:",winnerHandType, "compositionWinnerHand:",compositionWinnerHand)
     
     return  winnerHand, winnerHandType, compositionWinnerHand
 
 
-
-
-
-
-    winnerHand='hand2'
-    winnerHandType='OnePair'
-    compositionWinnerHand =[mayorMano2]
-
-
-    return  winnerHand, winnerHandType, compositionWinnerHand
-    
-
 # Validacion Dos Pares 
 def TwoPair():
 
     pass
 
-# Validacion 3 Cartas del mismo valor
-def ThreeOfAKind():
-
-    pass
-
-# Validacion Escalera
-def Straight():
-
-    pass
 
 
+
+
+""" def compararManos(manos_New):
+    bandera=1
+    winnerHandType= ""
+    resultado=[]
+    manosSeparadas=CardValue(manos_New)
+
+    print("---------------PASO 1-----------------")
+    print(winnerHandType)
+    print(manosSeparadas[0])
+    print(manosSeparadas[2])
+        
+    Straight()
+    if winnerHandType== "Straight":
+        pass
+    
+
+    ThreeOfAKind()
+    if winnerHandType== "ThreeOfAKind":
+        pass
+
+    TwoPair()
+    if winnerHandType== "TwoPair":
+        pass
+    
+
+    if bandera==1:
+        resultado = OnePair(manosSeparadas[0], manosSeparadas[2])
+        
+            
+        if resultado[1]== "OnePair":
+
+            bandera=0       
+            print (bandera)
+            print("---------------RESPUESTA OnePair -----------------")
+    
+ 
+    if bandera==1:
+
+        resultado = HighCard(manosSeparadas[0], manosSeparadas[2])
+        print("---------------AQUIIIIIIIII -----------------")
+        print (resultado[1])
+
+        if resultado[1]=="HighCard":
+                print("---------------RESPUESTA HighCard -----------------")
+
+                print("winnerHand:", resultado[0], "winnerHandType:",resultado[1], "compositionWinnerHand:",resultado[2])
+    
+    return resultado """
 
 if __name__ == '__main__':
     app.run (debug=True, port=9999)
+
