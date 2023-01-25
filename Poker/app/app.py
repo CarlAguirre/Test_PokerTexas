@@ -34,10 +34,10 @@ def manos():
         res=Flush(manosSeparadas[0], manosSeparadas[1], manosSeparadas[2],manosSeparadas[3])
 
     if tipoMano[0] == "FourOfAKind":
-        res=FourOfAKind(manosSeparadas[0], manosSeparadas[1], manosSeparadas[2],manosSeparadas[3])
+        res=FourOfAKind(manosSeparadas[0], manosSeparadas[2])
     
     if tipoMano[0] == "TwoPair":
-        res=TwoPair(manosSeparadas[0], manosSeparadas[1], manosSeparadas[2],manosSeparadas[3])
+        res=TwoPair(manosSeparadas[0], manosSeparadas[2], tipoMano[1])
     
     if tipoMano[0] == "OnePair":
         res=OnePair(manosSeparadas[0], manosSeparadas[2], tipoMano[1])
@@ -167,11 +167,81 @@ def CartaMayor(numbers):
     return nMayor
 
 
-def Flush():
-    pass
+def Flush(mano1Numbers, mano1Palos, mano2Numbers, mano2Palos):
 
-def FourOfAKind():
-    pass
+    mayorMano1 = CartaMayor(mano1Numbers)
+    mayorMano2 = CartaMayor(mano2Numbers)
+
+    palos={"C":"Club","D":"Diamond","H":"Heart","S":"Spade"}
+    palo1=set(mano1Palos)
+    palo2=set(mano2Palos)
+    p1=list(palo1)
+    p2=list(palo2)
+    
+    if len(palo1)==1 and len(palo2)!=1:
+        winnerHand='hand1'
+        winnerHandType='Flush'
+        compositionWinnerHand = [palos[p1[0]]]
+    elif len(palo1)!=1 and len(palo2)==1:
+        winnerHand='hand2'
+        winnerHandType='Flush'
+        compositionWinnerHand = [palos[p2[0]]]
+    elif len(palo1)==1 and len(palo2)==1:
+
+        if "A" in mano1Numbers and "A" not in mano2Numbers:
+            winnerHand='hand1'
+            winnerHandType='Flush'
+            compositionWinnerHand = [palos[p1[0]]]
+        elif "A" not in mano1Numbers and "A" in mano2Numbers:
+            winnerHand='hand2'
+            winnerHandType='Flush'
+            compositionWinnerHand = [palos[p2[0]]]
+
+        elif mayorMano1 > mayorMano2:
+            winnerHand='hand1'
+            winnerHandType='Flush'
+            compositionWinnerHand = [palos[p1[0]]]
+        elif mayorMano1 < mayorMano2:
+            winnerHand='hand2'
+            winnerHandType='Flush'
+            compositionWinnerHand = [palos[p2[0]]]
+
+    return  winnerHand, winnerHandType, compositionWinnerHand
+
+def FourOfAKind(mano1Numbers, mano2Numbers):
+
+    setMano1=set()
+    dup= [x for x in mano1Numbers if x in setMano1 or (setMano1.add(x) or False)]
+    setMano2=set()
+    dup2= [x for x in mano2Numbers if x in setMano2 or (setMano2.add(x) or False)]
+
+    mano1=list(dup)
+    mano2=list(dup2)
+
+    if len(mano1)>len(mano2):
+        winnerHand='hand1'
+        winnerHandType='FourOfAKind'
+        compositionWinnerHand = mano1
+    
+    elif len(mano1)<len(mano2):
+        winnerHand='hand2'
+        winnerHandType='FourOfAKind'
+        compositionWinnerHand = mano2
+    
+    elif len(mano1)==len(mano2):
+        sum1=int(mano1[0])+int(mano1[1])+int(mano1[2])+int(mano1[3])
+        sum2=int(mano2[0])+int(mano2[1])+int(mano2[2])+int(mano2[3])
+        
+        if sum1>sum2:
+            winnerHand='hand1'
+            winnerHandType='FourOfAKind'
+            compositionWinnerHand = mano1
+        elif sum1<sum2:
+            winnerHand='hand2'
+            winnerHandType='FourOfAKind'
+            compositionWinnerHand = mano2
+
+    return  winnerHand, winnerHandType, compositionWinnerHand
 
 
 # Validacion 1 par
@@ -232,68 +302,72 @@ def OnePair(mano1Numbers, mano2Numbers, nmayor):
             dup2[0]='King'
         compositionWinnerHand = dup2
 
-    print("winnerHand:", winnerHand, "winnerHandType:",winnerHandType, "compositionWinnerHand:",compositionWinnerHand)
+    """ print("winnerHand:", winnerHand, "winnerHandType:",winnerHandType, "compositionWinnerHand:",compositionWinnerHand) """
     
     return  winnerHand, winnerHandType, compositionWinnerHand
 
 
 # Validacion Dos Pares 
-def TwoPair():
+def TwoPair(mano1Numbers, mano2Numbers, nMayor):
 
-    pass
-
-
-
-
-
-""" def compararManos(manos_New):
-    bandera=1
-    winnerHandType= ""
-    resultado=[]
-    manosSeparadas=CardValue(manos_New)
-
-    print("---------------PASO 1-----------------")
-    print(winnerHandType)
-    print(manosSeparadas[0])
-    print(manosSeparadas[2])
-        
-    Straight()
-    if winnerHandType== "Straight":
-        pass
-    
-
-    ThreeOfAKind()
-    if winnerHandType== "ThreeOfAKind":
-        pass
-
-    TwoPair()
-    if winnerHandType== "TwoPair":
-        pass
-    
-
-    if bandera==1:
-        resultado = OnePair(manosSeparadas[0], manosSeparadas[2])
-        
-            
-        if resultado[1]== "OnePair":
-
-            bandera=0       
-            print (bandera)
-            print("---------------RESPUESTA OnePair -----------------")
-    
+    setMano1=set()
+    dup= [x for x in mano1Numbers if x in setMano1 or (setMano1.add(x) or False)]
+    setMano2=set()
+    dup2= [x for x in mano2Numbers if x in setMano2 or (setMano2.add(x) or False)]
+    mayor1 = CartaMayor(dup)
+    mayor2 = CartaMayor(dup2)
+    dup.sort(reverse=True)
+    dup2.sort(reverse=True)
  
-    if bandera==1:
+    if len(dup) == len(dup2):
+        if mayor1=='As':
+            winnerHand='hand1'
+            winnerHandType='TwoPair'
+            compositionWinnerHand =['As']      
+        elif mayor2=='As':
+            winnerHand='hand2'
+            winnerHandType='TwoPair'
+            compositionWinnerHand =['As']
+        elif mayor1 > mayor2:
+            winnerHand='hand1'
+            winnerHandType='TwoPair'
+            compositionWinnerHand =[mayor1]
+        elif mayor1 < mayor2:
+            winnerHand='hand2'
+            winnerHandType='TwoPair'
+            compositionWinnerHand =[mayor2]
+    elif len(dup) > len(dup2):
+        winnerHand='hand1'
+        winnerHandType='TwoPair'
+        if dup[0] =='A':
+            dup[0] ='As'
+        if dup[0] == 'J':
+            dup[0]='Jack'
+        if dup[0] == 'Q':
+            dup[0]='Queen'
+        if dup[0] == 'K':
+            dup[0]='King'
+        compositionWinnerHand = dup
 
-        resultado = HighCard(manosSeparadas[0], manosSeparadas[2])
-        print("---------------AQUIIIIIIIII -----------------")
-        print (resultado[1])
+    elif len(dup) < len(dup2):
+        winnerHand='hand2'
+        winnerHandType='TwoPair'
+        if 'A'in dup2[0]:
+            dup2[0] ='As'
+        if dup2[0] == 'J':
+            dup2[0]='Jack'
+        if dup2[0] == 'Q':
+            dup2[0]='Queen'
+        if dup2[0] == 'K':
+            dup2[0]='King'
+        compositionWinnerHand = dup2
 
-        if resultado[1]=="HighCard":
-                print("---------------RESPUESTA HighCard -----------------")
 
-                print("winnerHand:", resultado[0], "winnerHandType:",resultado[1], "compositionWinnerHand:",resultado[2])
-    
-    return resultado """
+    print("winnerHand:", winnerHand, "winnerHandType:",winnerHandType, "compositionWinnerHand:",compositionWinnerHand)
+    return  winnerHand, winnerHandType, compositionWinnerHand
+
+
+
 
 if __name__ == '__main__':
     app.run (debug=True, port=9999)
