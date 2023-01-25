@@ -1,10 +1,9 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, current_app
 from flask_expects_json import expects_json
+from waitress import serve
 import json
 
 app= Flask(__name__)
-
-
 
 schema_Hands = {"type": "object", "properties": {"hand1": {"type": "string","minLength": 14, "maxLength": 15}, "hand2": {"type": "string","minLength": 14,"maxLength": 15}},
                     "required": ["hand1", "hand2"]}
@@ -70,8 +69,8 @@ def CardValue(manos_New):
         mano2Numbers.append(carta[0])
         mano2Palos.append(carta[1])
     
-    print (mano1Numbers, mano1Palos)
-    print (mano2Numbers, mano2Palos)
+    """ print (mano1Numbers, mano1Palos)
+    print (mano2Numbers, mano2Palos) """
     
     return mano1Numbers, mano1Palos, mano2Numbers, mano2Palos
 
@@ -249,13 +248,13 @@ def OnePair(mano1Numbers, mano2Numbers, nmayor):
     
     setMano1=set()
     dup= [x for x in mano1Numbers if x in setMano1 or (setMano1.add(x) or False)]
-    print("dup")
-    print(dup)
+    """ print("dup")
+    print(dup) """
 
     setMano2=set()
     dup2= [x for x in mano2Numbers if x in setMano2 or (setMano2.add(x) or False)]
-    print("dup2")
-    print(dup2)
+    """ print("dup2")
+    print(dup2) """
     mayor1 = CartaMayor(dup)
     mayor2 = CartaMayor(dup2)
     
@@ -363,12 +362,16 @@ def TwoPair(mano1Numbers, mano2Numbers, nMayor):
         compositionWinnerHand = dup2
 
 
-    print("winnerHand:", winnerHand, "winnerHandType:",winnerHandType, "compositionWinnerHand:",compositionWinnerHand)
+    #print("winnerHand:", winnerHand, "winnerHandType:",winnerHandType, "compositionWinnerHand:",compositionWinnerHand)
     return  winnerHand, winnerHandType, compositionWinnerHand
 
 
 
 
 if __name__ == '__main__':
-    app.run (debug=True, port=9999)
+    # serve(app, host=dataConfig["url-backend"], port=)
+    """ app.run (port=9999) """
+    """ app.run (debug=True, port=9999) """
+    serve(app,host='127.0.0.1',port=9999) 
+    
 
